@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0d2e">
+    <title>For Tina 💕</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        p,
+        span {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="galaxyCanvas"></canvas>
+    <audio id="bgAudio" src="love-song.mp3" crossorigin="anonymous"></audio>
+
+    <!-- Image Lightbox Modal -->
+    <div id="imageModal" class="modal">
+        <canvas id="modalCanvas" class="modal-canvas"></canvas>
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modalImage" src="" alt="Gallery Photo">
+            <div class="modal-controls">
+                <button id="prevBtn">← Previous</button>
+                <button id="nextBtn">Next →</button>
+            </div>
+            <p id="imageCounter"></p>
+        </div>
+    </div>
+
+    <div id="container">
+        <div id="content-overlay">
+            <h1>Tina</h1>
+            <p class="subtitle">A Galaxy of Love</p>
+            <div class="message">
+                <p>You are my universe 💕</p>
+                <button id="galleryBtn" class="gallery-button">Explore the stars ✨</button>
+            </div>
+            <div class="love-quote">
+                <p>"In a galaxy of stars, you're my favorite constellation" 💫</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
