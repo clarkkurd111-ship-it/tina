@@ -104,8 +104,8 @@ let imageGalleryOpen = false;
 // Load images from folder
 function loadImages() {
     images = [
+        { src: 'img_1096.mp4', alt: 'Video', type: 'video' },
         { src: 'photo_1_2026-02-09_16-08-41.jpg', alt: 'Photo 1' },
-        { src: 'photo_2_2026-02-09_16-08-41.jpg', alt: 'Photo 2' },
         { src: 'photo_3_2026-02-09_16-08-41.jpg', alt: 'Photo 3' },
         { src: 'photo_4_2026-02-09_16-08-41.jpg', alt: 'Photo 4' },
         { src: 'photo_5_2026-02-09_16-08-41.jpg', alt: 'Photo 5' },
@@ -148,20 +148,40 @@ function showImage(index) {
     if (images.length === 0) return;
 
     const img = document.getElementById('modalImage');
+    const video = document.getElementById('modalVideo');
     const counter = document.getElementById('imageCounter');
 
-    if (!img || !counter) {
+    if (!img || !video || !counter) {
         return;
     }
 
-    // Add fade animation
-    img.style.animation = 'none';
-    setTimeout(() => {
-        img.src = images[index].src;
-        img.alt = images[index].alt;
-        counter.textContent = `${index + 1} / ${images.length}`;
-        img.style.animation = 'imageZoom 0.4s ease-out';
-    }, 10);
+    const item = images[index];
+    counter.textContent = `${index + 1} / ${images.length}`;
+
+    if (item.type === 'video') {
+        img.style.display = 'none';
+        video.style.display = 'block';
+        video.classList.remove('image-transition');
+        void video.offsetWidth;
+        video.src = item.src;
+        video.load();
+        video.currentTime = 0;
+        video.play().catch(() => {
+            // Autoplay may be blocked until user interaction.
+        });
+        video.classList.add('image-transition');
+    } else {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        video.style.display = 'none';
+        img.style.display = 'block';
+        img.classList.remove('image-transition');
+        void img.offsetWidth;
+        img.src = item.src;
+        img.alt = item.alt;
+        img.classList.add('image-transition');
+    }
 }
 
 // Navigate to next image
@@ -186,7 +206,7 @@ function startAutoSlideshow() {
         } else {
             clearInterval(slideshowInterval);
         }
-    }, 3000); // Change image every 3 seconds
+    }, 5000); // Change image every 5 seconds
 }
 
 // Close modal
@@ -217,11 +237,11 @@ let backgroundStars = [];
 function resetBackgroundStars() {
     backgroundStars = [];
     const starCount = isMobile ? 200 : 400;
-    
+
     for (let i = 0; i < starCount; i++) {
         const depth = Math.random();
         const size = Math.pow(depth, 2) * 2 + 0.3;
-        
+
         // Realistic star colors
         let color;
         const rand = Math.random();
@@ -232,7 +252,7 @@ function resetBackgroundStars() {
         } else {
             color = 'rgba(240, 245, 250,'; // Pure white-ish
         }
-        
+
         backgroundStars.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -390,7 +410,7 @@ class Star {
         this.opacity = Math.random() * 0.5 + 0.3;
         this.twinkleSpeed = Math.random() * 0.03 + 0.01;
         this.twinkle = 0;
-        
+
         // Realistic star colors
         const rand = Math.random();
         if (rand > 0.95) {
@@ -643,10 +663,10 @@ function animate() {
             // Update twinkle
             star.twinkle += star.twinkleSpeed;
             const twinkleAlpha = star.alpha * (0.85 + Math.sin(star.twinkle) * 0.15);
-            
+
             const x = star.x + parallaxX * star.depth;
             const y = star.y + parallaxY * star.depth;
-            
+
             if (star.size < 0.8) {
                 // Tiny distant stars - simple points
                 ctx.fillStyle = `${star.color}${twinkleAlpha})`;
@@ -658,7 +678,7 @@ function animate() {
                 gradient.addColorStop(0, `${star.color}${twinkleAlpha})`);
                 gradient.addColorStop(0.6, `${star.color}${twinkleAlpha * 0.4})`);
                 gradient.addColorStop(1, `${star.color}0)`);
-                
+
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
                 ctx.arc(x, y, glowSize, 0, Math.PI * 2);
