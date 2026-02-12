@@ -161,14 +161,28 @@ function showImage(index) {
     if (item.type === 'video') {
         img.style.display = 'none';
         video.style.display = 'block';
+        video.controls = false;
+        video.muted = true;
+        video.playsInline = true;
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.setAttribute('muted', '');
         video.classList.remove('image-transition');
         void video.offsetWidth;
         video.src = item.src;
         video.load();
-        video.currentTime = 0;
-        video.play().catch(() => {
-            // Autoplay may be blocked until user interaction.
-        });
+        const tryPlay = () => {
+            const playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    video.controls = true;
+                });
+            }
+        };
+        video.addEventListener('loadedmetadata', () => {
+            video.currentTime = 0;
+            tryPlay();
+        }, { once: true });
         video.classList.add('image-transition');
     } else {
         video.pause();
