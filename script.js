@@ -97,142 +97,148 @@ function stopModalStarfield() {
         modalAnimationId = null;
     }
 }
-let images = [];
-let currentImageIndex = 0;
-let imageGalleryOpen = false;
+const galleryImages = [
+    { src: 'photo_2026-02-13_03-04-00.jpg', alt: 'Photo 17' },
+    { src: 'photo_1_2026-02-09_16-08-41.jpg', alt: 'Photo 1' },
+    { src: 'photo_3_2026-02-09_16-08-41.jpg', alt: 'Photo 2' },
+    { src: 'photo_4_2026-02-09_16-08-41.jpg', alt: 'Photo 3' },
+    { src: 'photo_5_2026-02-09_16-08-41.jpg', alt: 'Photo 4' },
+    { src: 'photo_6_2026-02-09_16-08-41.jpg', alt: 'Photo 5' },
+    { src: 'photo_7_2026-02-09_16-08-41.jpg', alt: 'Photo 6' },
+    { src: 'photo_8_2026-02-09_16-08-41.jpg', alt: 'Photo 7' },
+    { src: 'photo_9_2026-02-09_16-08-41.jpg', alt: 'Photo 8' },
+    { src: 'photo_10_2026-02-09_16-08-41.jpg', alt: 'Photo 9' },
+    { src: 'photo_11_2026-02-09_16-08-41.jpg', alt: 'Photo 10' },
+    { src: 'photo_12_2026-02-09_16-08-41.jpg', alt: 'Photo 11' },
+    { src: 'photo_13_2026-02-09_16-08-41.jpg', alt: 'Photo 12' },
+    { src: 'photo_14_2026-02-09_16-08-41.jpg', alt: 'Photo 13' },
+    { src: 'photo_15_2026-02-09_16-08-41.jpg', alt: 'Photo 14' },
+    { src: 'photo_16_2026-02-09_16-08-41.jpg', alt: 'Photo 15' },
+    { src: 'photo_17_2026-02-09_16-08-41.jpg', alt: 'Photo 16' }
+];
 
-// Load images from folder
-function loadImages() {
-    images = [
-        { src: 'img_1096.mp4', alt: 'Video', type: 'video' },
-        { src: 'photo_1_2026-02-09_16-08-41.jpg', alt: 'Photo 1' },
-        { src: 'photo_3_2026-02-09_16-08-41.jpg', alt: 'Photo 3' },
-        { src: 'photo_4_2026-02-09_16-08-41.jpg', alt: 'Photo 4' },
-        { src: 'photo_5_2026-02-09_16-08-41.jpg', alt: 'Photo 5' },
-        { src: 'photo_6_2026-02-09_16-08-41.jpg', alt: 'Photo 6' },
-        { src: 'photo_7_2026-02-09_16-08-41.jpg', alt: 'Photo 7' },
-        { src: 'photo_8_2026-02-09_16-08-41.jpg', alt: 'Photo 8' },
-        { src: 'photo_9_2026-02-09_16-08-41.jpg', alt: 'Photo 9' },
-        { src: 'photo_10_2026-02-09_16-08-41.jpg', alt: 'Photo 10' },
-        { src: 'photo_11_2026-02-09_16-08-41.jpg', alt: 'Photo 11' },
-        { src: 'photo_12_2026-02-09_16-08-41.jpg', alt: 'Photo 12' },
-        { src: 'photo_13_2026-02-09_16-08-41.jpg', alt: 'Photo 13' },
-        { src: 'photo_14_2026-02-09_16-08-41.jpg', alt: 'Photo 14' },
-        { src: 'photo_15_2026-02-09_16-08-41.jpg', alt: 'Photo 15' },
-        { src: 'photo_16_2026-02-09_16-08-41.jpg', alt: 'Photo 16' },
-        { src: 'photo_17_2026-02-09_16-08-41.jpg', alt: 'Photo 17' }
-    ];
+const galleryCaptions = [
+    'You are my North Star.',
+    'My favorite view in the universe.',
+    'We are made of stardust and soft laughter.',
+    'Every orbit leads me back to you.',
+    'You turn my night sky into a love story.',
+    'My heart found its galaxy in you.',
+    'You are the glow I follow home.',
+    'With you, even silence sparkles.',
+    'Our love is a constellation of tiny miracles.',
+    'You are the comet I always wish for.',
+    'You make the universe feel smaller and warmer.',
+    'I love you beyond all the light-years.',
+    'You are the calm in my cosmic storm.',
+    'Your smile is a supernova in my sky.',
+    'I would cross every galaxy to find you.',
+    'You are the softest star in my night.',
+    'Forever, you are my favorite star.'
+];
+
+let currentIndex = 0;
+
+function showSlide(index) {
+    const photo = document.getElementById('starPhoto');
+    const caption = document.getElementById('captionText');
+
+    if (!photo || !caption) return;
+
+    currentIndex = (index + galleryImages.length) % galleryImages.length;
+    const item = galleryImages[currentIndex];
+
+    photo.classList.remove('photo-fade');
+    void photo.offsetWidth;
+    photo.src = item.src;
+    photo.alt = item.alt;
+    photo.classList.add('photo-fade');
+    caption.textContent = galleryCaptions[currentIndex];
 }
 
-// Open image modal
-function openImageGallery() {
-    if (images.length === 0) {
-        return;
-    }
-
-    const modal = document.getElementById('imageModal');
-    if (!modal) {
-        return;
-    }
-
-    modal.classList.add('show');
-    imageGalleryOpen = true;
-    currentImageIndex = 0;
-    showImage(currentImageIndex);
-    startAutoSlideshow();
-    startModalStarfield(); // Start starfield animation
+function nextSlide() {
+    showSlide(currentIndex + 1);
 }
 
-// Show specific image
-function showImage(index) {
-    if (images.length === 0) return;
+function prevSlide() {
+    showSlide(currentIndex - 1);
+}
 
-    const img = document.getElementById('modalImage');
-    const video = document.getElementById('modalVideo');
-    const counter = document.getElementById('imageCounter');
+function setupSwipe() {
+    const frame = document.querySelector('.slider-frame');
+    if (!frame) return;
 
-    if (!img || !video || !counter) {
-        return;
-    }
+    let startX = 0;
+    let startY = 0;
 
-    const item = images[index];
-    counter.textContent = `${index + 1} / ${images.length}`;
+    frame.addEventListener('touchstart', (event) => {
+        const touch = event.touches[0];
+        if (!touch) return;
+        startX = touch.clientX;
+        startY = touch.clientY;
+    }, { passive: true });
 
-    if (item.type === 'video') {
-        img.style.display = 'none';
-        video.style.display = 'block';
-        video.controls = false;
-        video.muted = true;
-        video.playsInline = true;
-        video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
-        video.setAttribute('muted', '');
-        video.classList.remove('image-transition');
-        void video.offsetWidth;
-        video.src = item.src;
-        video.load();
-        const tryPlay = () => {
-            const playPromise = video.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(() => {
-                    video.controls = true;
-                });
+    frame.addEventListener('touchend', (event) => {
+        const touch = event.changedTouches[0];
+        if (!touch) return;
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+
+        if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX < 0) {
+                nextSlide();
+            } else {
+                prevSlide();
             }
-        };
-        video.addEventListener('loadedmetadata', () => {
-            video.currentTime = 0;
-            tryPlay();
-        }, { once: true });
-        video.classList.add('image-transition');
-    } else {
-        video.pause();
-        video.removeAttribute('src');
-        video.load();
-        video.style.display = 'none';
-        img.style.display = 'block';
-        img.classList.remove('image-transition');
-        void img.offsetWidth;
-        img.src = item.src;
-        img.alt = item.alt;
-        img.classList.add('image-transition');
+        }
+    });
+}
+
+function createStarDust() {
+    const dustLayer = document.querySelector('.star-dust');
+    if (!dustLayer) return;
+
+    const colors = ['rgba(255,255,255,0.85)', 'rgba(255,182,226,0.8)', 'rgba(200,220,255,0.8)'];
+    const dustCount = 28;
+
+    for (let i = 0; i < dustCount; i++) {
+        const particle = document.createElement('span');
+        particle.style.setProperty('--dust-left', `${Math.random() * 100}%`);
+        particle.style.setProperty('--dust-size', `${2 + Math.random() * 3}px`);
+        particle.style.setProperty('--dust-duration', `${10 + Math.random() * 12}s`);
+        particle.style.setProperty('--dust-delay', `${Math.random() * 8}s`);
+        particle.style.setProperty('--dust-color', colors[i % colors.length]);
+        dustLayer.appendChild(particle);
     }
 }
 
-// Navigate to next image
-function nextImage() {
-    currentImageIndex = (currentImageIndex + 1) % images.length;
-    showImage(currentImageIndex);
+function burstHearts() {
+    const layer = document.getElementById('confettiLayer');
+    if (!layer) return;
+
+    const colors = ['#ff8ac7', '#ffc2e1', '#c7b8ff', '#9ad9ff'];
+    const count = 24;
+
+    for (let i = 0; i < count; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'confetti-heart';
+        heart.textContent = '❤';
+        heart.style.setProperty('--heart-left', `${Math.random() * 100}%`);
+        heart.style.setProperty('--heart-size', `${12 + Math.random() * 12}px`);
+        heart.style.setProperty('--heart-duration', `${2 + Math.random() * 1.5}s`);
+        heart.style.setProperty('--heart-drift', `${(Math.random() - 0.5) * 160}px`);
+        heart.style.setProperty('--heart-color', colors[i % colors.length]);
+        layer.appendChild(heart);
+
+        heart.addEventListener('animationend', () => {
+            heart.remove();
+        });
+    }
 }
 
-// Navigate to previous image
-function prevImage() {
-    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-    showImage(currentImageIndex);
-}
-
-// Auto slideshow
-let slideshowInterval = null;
-function startAutoSlideshow() {
-    if (slideshowInterval) clearInterval(slideshowInterval);
-    slideshowInterval = setInterval(() => {
-        if (imageGalleryOpen) {
-            nextImage();
-        } else {
-            clearInterval(slideshowInterval);
-        }
-    }, 5000); // Change image every 5 seconds
-}
-
-// Close modal
-function closeImageGallery() {
-    const modal = document.getElementById('imageModal');
-    modal.classList.remove('show');
-    imageGalleryOpen = false;
-    stopModalStarfield(); // Stop starfield animation
-    if (slideshowInterval) clearInterval(slideshowInterval);
-}
-
-loadImages();
+showSlide(0);
+setupSwipe();
+createStarDust();
 const canvas = document.getElementById('galaxyCanvas');
 if (!canvas) {
     console.error('Canvas element not found!');
@@ -594,69 +600,24 @@ document.addEventListener('touchmove', (e) => {
     }
 }, { passive: false });
 
-// Setup modal controls when DOM is ready
-function setupModalControls() {
-    console.log('Setting up modal controls...');
-    const closeBtn = document.querySelector('.close');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const modal = document.getElementById('imageModal');
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeImageGallery();
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            nextImage();
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            prevImage();
-        });
-    }
-
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target.id === 'imageModal') {
-                closeImageGallery();
-            }
-        });
-    }
-}
-
-// Setup immediately
-setupModalControls();
-
-// Add button click handler
 const galleryBtn = document.getElementById('galleryBtn');
 if (galleryBtn) {
     galleryBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         startBackgroundAudio();
-        openImageGallery();
+        const section = document.getElementById('explore-stars');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
 }
 
-// Keyboard navigation for gallery
-document.addEventListener('keydown', (e) => {
-    if (!imageGalleryOpen) return;
-
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        nextImage();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        prevImage();
-    } else if (e.key === 'Escape') {
-        closeImageGallery();
-    }
-});
+const loveButton = document.getElementById('loveButton');
+if (loveButton) {
+    loveButton.addEventListener('click', () => {
+        burstHearts();
+    });
+}
 
 // Animation loop
 function animate() {
